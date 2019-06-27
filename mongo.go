@@ -297,8 +297,12 @@ func (m Handler) Find(ctx context.Context, q *query.Query) (*resource.ItemList, 
 	iter := mq.Iter()
 	// Total is set to -1 because we have no easy way with MongoDB to to compute
 	// this value without performing two requests.
+	total, err := m.Count(ctx, q)
+	if err != nil {
+		return nil, err
+	}
 	list := &resource.ItemList{
-		Total: -1,
+		Total: total,
 		Limit: limit,
 		Items: []*resource.Item{},
 	}
